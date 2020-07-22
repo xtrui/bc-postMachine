@@ -1,39 +1,39 @@
 function printReceipt(barcodes) {
     items = loadItems();
     order = createOrder(barcodes);
-    str = generateRecept(items, order);
+    receiptDetail = generateReceipt(items, order);
     console.log(`
 ***<store earning no money>Receipt ***
 `+
-str)
+receiptDetail)
 }
 
-function generateRecept(items, barcodes) {
+function generateReceipt(items,order) {
     
     total = 0;
-    str = "";
+    receiptDetail= "";
     items.forEach(element => {
         if (order[element.barcode]) {
             subtotal = element.price * order[element.barcode];
             total += subtotal;
-            str += "Name: " + element.name + ", Quantity: " + order[element.barcode] + ", Unit price: " + element.price + " (yuan), Subtotal: " + subtotal + " (yuan)";
-            str += "\n";
+            receiptDetail += "Name: " + element.name + ", Quantity: " + order[element.barcode] + ", Unit price: " + element.price + " (yuan), Subtotal: " + subtotal + " (yuan)";
+            receiptDetail += "\n";
         }
     });
-    str +=`----------------------
+    receiptDetail +=`----------------------
 Total: `+total+` (yuan)
 **********************`;
-    return str;
+    return receiptDetail;
 }
 
 function createOrder(barcodes) {
-    return barcodes.reduce(function (allNames, name) {
-        if (name in allNames) {
-            allNames[name]++;
+    return barcodes.reduce(function (order, barCode) {
+        if (barCode in order) {
+            order[barCode]++;
         }
         else {
-            allNames[name] = 1;
-        } return allNames;
+            order[barCode] = 1;
+        } return order;
     }, {});
 }
 
